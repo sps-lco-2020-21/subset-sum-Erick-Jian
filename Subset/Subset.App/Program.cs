@@ -25,17 +25,18 @@ namespace Subset.App
          */
         static void Main(string[] args)
         {
-            List<int> Set = new List<int> { 3, 10, 5, 17, 8, 7, 4, 4, 1, 16, 21, 19, 23 };
+            List<int> Set = new List<int> { 3, 10, 5, 17, 8, 7, 4, 4, 1, 16, 21, 19 };
             int p = 23;
 
             // Step 1: base case: p is in the list
-            if (S.Contains(p))
+            if (Set.Contains(p))
                 Console.WriteLine("{", p, "}");
 
             // Step 2: filter out the ones that are MORE than the sum required
             List<int> ValidItems = Set.Where(a => a <= p).ToList();
 
             BruteForce(p, ValidItems);
+            Stocastic(p, ValidItems);
             FindASet(p, ValidItems);
 
             while (Console.ReadKey().Key != ConsoleKey.Enter)
@@ -54,16 +55,29 @@ namespace Subset.App
                     if (FilteredSet.Contains(P - member - X))
                         Console.WriteLine("{{0},{1},{2}}", member, X , P - member - X);
                 
-                /* This can continue forever. While no improvement in run time. WCS requires exponential time
+                /* This can continue forever. While no improvement in run time. WCS requires exponential / factorial time
                  * Hence, random approach should be considered. */
+            }
+        }
+
+        static void Stocastic(int P, List<int> FilteredSet)
+        {
+            Random Num = new Random();
+            int RandomNum = Num.Next(0, FilteredSet.Count);
+            for (int count = 0; count <= 20; ++count )
+            {
+                int A = FilteredSet[RandomNum];
+                int B = FilteredSet[RandomNum];
+                string twomembers = P == A + B ? String.Format($"{"{"} {A},{B},{"}"}") : null;
             }
         }
 
         static void FindASet(int P, List<int> FilteredSet)
         {
-            int Start = FilteredSet.Max();
-            int FirstRemainder = P - Start;
-            if (FirstRemainder <= Start)
+            int StartMax = FilteredSet.Max();
+            int EstimatedSetSize = P / StartMax;
+            int FirstRemainder = P - StartMax;
+            if (FirstRemainder <= StartMax)
 
                 Console.WriteLine(FilteredSet);
 
